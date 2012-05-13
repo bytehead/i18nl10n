@@ -35,26 +35,25 @@
  */
 $this->loadLanguageFile('languages');
 $GLOBALS['TL_DCA']['tl_article']['list']['label']['label_callback'] = array('tl_article_l10ns','addIcon');
+
 class tl_article_l10ns extends tl_article 
 {
     /**
      * Add summary of elements by language.
      * TODO: Make it possible to switch summary off. add widget to tl_settings.
      */
-    public function addIcon($row, $label) {
+    public function addIcon($row, $label) 
+    {
         $label = parent::addIcon($row, $label);
         //count content elements in different languages and display them
-        $sql='SELECT COUNT(id) items,language FROM tl_content WHERE pid =? GROUP BY language';
+        $sql = "SELECT COUNT(id) items,language FROM tl_content WHERE pid =? GROUP BY language";
         $items = $this->Database->prepare($sql)->execute($row['id'])->fetchAllAssoc();
-        if(!empty($items)) foreach($items as $lang) {
+
+        if(!empty($items)) foreach($items as $lang) 
+        {
             $count = $lang['items'];
             $title = $GLOBALS['TL_LANG']['LNG'][$lang['language']].": $count elements";
-            $label .= ($lang['language']?
-		         '<img title="'.$title.'" style="vertical-align:middle"'
-                .' src="system/modules/i18nl10n/html/flag_icons/png/'
-                .$lang['language'].'.png" /> ':'
-                <img title="'.$title.'" style="vertical-align:middle"'
-                .' src="system/modules/i18nl10n/html/icon.png" />');
+            $label .= ($lang['language'] ? '<img title="'.$title.'" style="vertical-align:middle" src="system/modules/i18nl10n/html/flag_icons/png/'.$lang['language'].'.png" />' : '<img title="'.$title.'" style="vertical-align:middle" src="system/modules/i18nl10n/html/icon.png" />');
         }
         return $label;
     }
